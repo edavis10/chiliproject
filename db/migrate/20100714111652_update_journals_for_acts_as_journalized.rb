@@ -9,6 +9,8 @@ class UpdateJournalsForActsAsJournalized < ActiveRecord::Migration
       Journal.all.group_by(&:journaled_id).each_pair do |id, journals|
         journals.sort_by(&:created_at).each_with_index do |j, idx|
           # Recast the basic Journal into it's STI journalized class so callbacks work (#467)
+          puts "DEBUG: #{j.class.to_s}##{j.id}"
+          puts "       Class name of: #{j.try(:journalized_type)}Journal"
           klass_name = "#{j.journalized_type}Journal"
           j = j.becomes(klass_name.constantize)
           j.type = klass_name
