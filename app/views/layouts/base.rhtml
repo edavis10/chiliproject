@@ -83,10 +83,20 @@
             <%= text_field_tag 'q', @question, :size => 20, :class => 'small', :accesskey => accesskey(:quick_search) %>
         <% end %>
         </li>
+          <% unless User.current.logged? %>
+            <li>
+              <%= link_to l(:label_login), {:controller => 'account', :action => 'login'}, :class => 'login' %>
+              <%= render :partial => 'account/login' %>
+            </li>
+          <% else %>
+            <%= content_tag('li', "#{link_to_user(User.current)}", :id => '') %>
+            <% if User.current.logged? %>
+              <li><%= link_to l(:label_logout),:signout%></li>
+            <% end %>
+          <% end %>
       </ul>
       <% end %>
     </div>
-
   </div>
       
   <% main_menu = render_main_menu(@project) %>
