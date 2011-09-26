@@ -86,7 +86,10 @@
           <% unless User.current.logged? %>
             <li>
               <%= link_to l(:label_login), {:controller => 'account', :action => 'login'}, :class => 'login' %>
-              <%= render :partial => 'account/login' %>
+              <!-- IE7 Fix - extra div needed for slideToggle animation -->
+              <div id="nav-login">
+                <%= render :partial => 'account/login' %>
+              </div>
             </li>
           <% else %>
             <%= content_tag('li', "#{link_to_user(User.current)}", :id => '') %>
