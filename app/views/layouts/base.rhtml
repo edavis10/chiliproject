@@ -61,16 +61,10 @@
           </ul>
         </li>
         <li class="drop-down" id="more-menu">
-          <a class="more" href="#">More</a>
+          <a class="more" href="#">Modules</a>
           <ul style="display:none;">
             <% more_top_menu_items.each do |item| %>
             <%= render_menu_node(item) %>
-            <% end %>
-            <%# TODO: Redmine defines these in a view, should be moved to a helper or data structure %>
-            <% if User.current.admin? %>
-              <% menu_items_for(:admin_menu) do |item| -%>
-                <li><%= link_to h(item.caption), item.url, item.html_options %></li>
-              <% end -%>
             <% end %>
           </ul>
         </li>
@@ -82,6 +76,7 @@
             <%= hidden_field_tag(controller.default_search_scope, 1, :id => nil) if controller.default_search_scope %>
             <%= text_field_tag 'q', @question, :size => 20, :class => 'small', :accesskey => accesskey(:quick_search) %>
         <% end %>
+        <%= render_menu_node(help_menu_item) %>
         </li>
           <% unless User.current.logged? %>
             <li>
@@ -104,6 +99,10 @@
       </ul>
       <% end %>
     </div>
+    </div>
+    <div id="breadcrumb">
+      <%= page_header_title %>
+    </div>
   </div>
       
   <% main_menu = render_main_menu(@project) %>
@@ -113,8 +112,6 @@
   <% display_sidebar = false %>
   <% end %>
   <div id="main" class="<%= display_sidebar ? '' : "nosidebar" %>">
-  
-    <h1 class="title"><%= page_header_title %></h1>
     <% if display_sidebar %>
     <div id="main-menu">
       <%= main_menu %>
