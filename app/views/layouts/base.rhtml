@@ -34,12 +34,13 @@
 <div id="wrapper">
   <div id="top-menu">
     <div id="account">
-      <% account_items =  menu_items_for(:account_menu) %>
-
-      <ul id="account-info">
-        <%= content_tag('li', "#{l(:label_logged_as)} #{link_to_user(User.current, :format => :username)}", :id => '') if User.current.logged? %>
-        <% account_items.each do |item| %>
-            <%= render_menu_node(item) %>
+      <div id="logo"></div>
+      <div id="top-menu-items">
+      <div id="search">
+        <%= label_tag("q", l(:label_search), :class => "hidden-for-sighted") %>
+        <% form_tag({:controller => 'search', :action => 'index', :id => @project}, :method => :get) do %>
+          <%= hidden_field_tag(controller.default_search_scope, 1, :id => nil) if controller.default_search_scope %>
+          <%= text_field_tag 'q', @question, :size => 20, :class => 'search_field', :placeholder => l(:search_input_placeholder), :accesskey => accesskey(:quick_search) %>
         <% end %>
       </ul>
 
@@ -74,7 +75,6 @@
             <%= text_field_tag 'q', @question, :size => 20, :class => 'small', :accesskey => accesskey(:quick_search) %>
         <% end %>
         <%= render_menu_node(help_menu_item) %>
-        </li>
           <% unless User.current.logged? %>
             <li>
               <%= link_to l(:label_login), {:controller => 'account', :action => 'login'}, :class => 'login' %>
