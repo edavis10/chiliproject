@@ -204,7 +204,7 @@ Redmine::MenuManager.map :project_menu do |menu|
               :if => Proc.new { |p| p.shared_versions.any? }
 
   menu.push :issues, { :controller => 'issues', :action => 'index' }, :param => :project_id, :caption => :label_issue_plural
-  menu.push :new_issue, { :controller => 'issues', :action => 'new' }, :param => :project_id, :caption => :label_issue_new, :parent => :issues,
+  menu.push :new_issue, { :controller => 'issues', :action => 'new' }, :param => :project_id, :caption => :label_issue_new,
               :html => { :accesskey => Redmine::AccessKeys.key_for(:new_issue) }
   menu.push :view_all_issues, { :controller => 'issues', :action => 'all' }, :param => :project_id, :caption => :label_issue_view_all, :parent => :issues
   menu.push :summary_field, {:controller => 'reports', :action => 'issue_report'}, :param => :id, :caption => :field_summary, :parent => :issues
