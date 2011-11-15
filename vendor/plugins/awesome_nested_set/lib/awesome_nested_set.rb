@@ -110,7 +110,7 @@ module CollectiveIdea #:nodoc:
         end
         
         def valid?
-          left_and_rights_valid? && no_duplicates_for_columns? && all_roots_valid?
+          left_and_rights_valid? && no_duplicates_for_columns? && all_roots_valid? && all_nodes_valid?
         end
         
         def left_and_rights_valid?
@@ -159,6 +159,30 @@ module CollectiveIdea #:nodoc:
               left = root.left
               right = root.right
             end
+          end
+        end
+
+        # Check that all the nodes are sorted correctly
+        def all_nodes_valid?
+          roots.all? do |root|
+            child_nodes_valid_sort?(root)
+          end
+        end
+
+        # Is the node's children in a valid sort?
+        #
+        # Recursive
+        def child_nodes_valid_sort?(node)
+          sorted_by_set_option = node.children.sort do |a,b|
+            a.send(acts_as_nested_set_options[:order]) <=>
+              b.send(acts_as_nested_set_options[:order])
+          end
+          valid_order = (sorted_by_set_option == node.children)
+          
+          return false unless valid_order
+          # Recurse
+          node.children.all? do |child|
+            child_nodes_valid_sort?(child)
           end
         end
                 

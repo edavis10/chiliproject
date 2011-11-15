@@ -77,6 +77,7 @@ class Project < ActiveRecord::Base
   validates_exclusion_of :identifier, :in => %w( new )
 
   before_destroy :delete_all_members
+  after_save :rebuild_tree_if_name_changed
 
   named_scope :has_module, lambda { |mod| { :conditions => ["#{Project.table_name}.id IN (SELECT em.project_id FROM #{EnabledModule.table_name} em WHERE em.name=?)", mod.to_s] } }
   named_scope :active, { :conditions => "#{Project.table_name}.status = #{STATUS_ACTIVE}"}
@@ -833,4 +834,13 @@ class Project < ActiveRecord::Base
     end
     update_attribute :status, STATUS_ARCHIVED
   end
+
+  # The project tree is ordered by name so when the name is changed
+  # it must be rebuilt.
+  def rebuild_tree_if_name_changed
+    if name_changed?
+      self.class.rebuild!
+    end
+  end
+  
 end

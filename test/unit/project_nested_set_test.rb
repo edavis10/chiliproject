@@ -56,6 +56,25 @@ class ProjectNestedSetTest < ActiveSupport::TestCase
       end
     end
 
+    context "changing name" do
+      should "resort tree based on new name" do
+        @a2.name = "A Project is before"
+        assert @a2.save
+
+        assert_nested_set_values({
+          @a   => [nil,   1,  6],
+          @a2  => [@a.id, 2,  3],
+          @a1  => [@a.id, 4,  5],
+          @b   => [nil,   7, 14],
+          @b1  => [@b.id, 8, 11],
+          @b11 => [@b1.id,9, 10],
+          @b2  => [@b.id,12, 13],
+          @c   => [nil,  15, 18],
+          @c1  => [@c.id,16, 17]
+        })
+      end
+    end
+    
     context "#set_parent!" do
       should "keep valid tree" do
         assert_no_difference 'Project.count' do
