@@ -723,7 +723,7 @@ module ApplicationHelper
         div_class = 'toc'
         div_class << ' right' if $1 == '>'
         div_class << ' left' if $1 == '<'
-        out = "<fieldset class='header_collapsible collapsible'><legend onclick='toggleFieldset(this);'></legend><div>"
+        out = "<fieldset class='header_collapsible collapsible'><legend onclick='toggleFieldset(this);'><a href='javascript:'>#{l(:label_table_of_contents)}</a></legend><div>"
         out << "<ul class=\"#{div_class}\"><li>"
         root = headings.map(&:first).min
         current = root
@@ -775,6 +775,16 @@ module ApplicationHelper
     back_url = params[:back_url] || request.env['HTTP_REFERER']
     back_url = CGI.unescape(back_url.to_s)
     hidden_field_tag('back_url', CGI.escape(back_url)) unless back_url.blank?
+  end
+
+  def back_url_to_current_page_hidden_field_tag
+    back_url = params[:back_url]
+    if back_url.present?
+      back_url = back_url.to_s
+    else
+      back_url = url_for(params) if request.get?
+    end
+    hidden_field_tag('back_url', back_url) unless back_url.blank?
   end
 
   def check_all_links(form_name)
@@ -940,7 +950,7 @@ module ApplicationHelper
   # Expands the current menu item using JavaScript based on the params
   def expand_current_menu
     current_menu_class =
-      case 
+      case
       when params[:controller] == "timelog"
         "reports"
       when params[:controller] == 'reports'
@@ -961,7 +971,7 @@ module ApplicationHelper
         params[:controller]
       end
 
-    
+
     javascript_tag("jQuery.menu_expand({ menuItem: '.#{current_menu_class}' });")
   end
 
